@@ -5,9 +5,9 @@ import { useDashboardStore } from '../store/useDashboardStore';
 import { getRTSDistribution } from '../lib/utils';
 
 const COLORS = [
-  '#1e3a5f', '#2a4a6b', '#3a5a85', '#4a6590', '#5a7aaa',
-  '#6b8cba', '#8aa0be', '#a0b4cc',
-  '#5c4066', '#4a3050', '#6b2d4a', '#1e4055',
+  '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
+  '#f43f5e', '#22c55e', '#6366f1', '#ec4899', '#f97316',
+  '#06b6d4', '#8b5cf6',
 ];
 
 export default function RTSPieChart() {
@@ -21,20 +21,20 @@ export default function RTSPieChart() {
       trigger: 'item',
       formatter: (params: { name: string; value: number }) => {
         const pct = total > 0 ? ((params.value / total) * 100).toFixed(1) : 0;
-        return `<div style="font-weight:600;margin-bottom:4px;color:#8892a8;">${params.name}</div>
-                <div style="color:#5a6480;">Count: <strong style="color:#8892a8;">${params.value}</strong></div>
-                <div style="color:#5a6480;">Percentage: <strong style="color:#8892a8;">${pct}%</strong></div>`;
+        return `<div style="font-weight:600;margin-bottom:4px;color:#c8cdd8;">${params.name}</div>
+                <div style="color:#6b7394;">Count: <strong style="color:#c8cdd8;">${params.value}</strong></div>
+                <div style="color:#6b7394;">Percentage: <strong style="color:#c8cdd8;">${pct}%</strong></div>`;
       },
-      backgroundColor: 'rgba(12,15,24,0.96)',
-      borderColor: 'rgba(42,53,85,0.5)',
+      backgroundColor: 'rgba(20,24,36,0.96)',
+      borderColor: 'rgba(42,47,69,0.5)',
       borderWidth: 1,
-      textStyle: { color: '#8892a8', fontSize: 13 },
+      textStyle: { color: '#c8cdd8', fontSize: 13 },
     },
     legend: {
       orient: 'vertical',
       right: 10,
       top: 'center',
-      textStyle: { fontSize: 12, color: '#5a6480' },
+      textStyle: { fontSize: 12, color: '#6b7394' },
       itemWidth: 12,
       itemHeight: 12,
     },
@@ -46,7 +46,7 @@ export default function RTSPieChart() {
       avoidLabelOverlap: true,
       itemStyle: {
         borderRadius: 6,
-        borderColor: '#0c0f18',
+        borderColor: '#161925',
         borderWidth: 2,
       },
       label: {
@@ -83,11 +83,11 @@ export default function RTSPieChart() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 }}
-      className="rounded-lg border border-[#1a2035] bg-[#0f1320]/50 p-5"
+      className="rounded-lg border border-border bg-card/50 p-5"
     >
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-[#8892a8]">RTS Code Distribution</h3>
-        <span className="rounded-full bg-[#141927] border border-[#1a2035] px-2.5 py-0.5 text-xs font-medium text-[#5a6480]">
+        <h3 className="text-sm font-medium text-muted-foreground">RTS Code Distribution</h3>
+        <span className="rounded-full bg-card border border-border px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
           {total} total
         </span>
       </div>

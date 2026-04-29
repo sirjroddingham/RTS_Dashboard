@@ -23,11 +23,11 @@ export default function Element3() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.15 }}
-      className="rounded-lg border border-[#1a2035] bg-[#0f1320]/50 p-5"
+      className="rounded-lg border border-border bg-card/50 p-5"
     >
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-[#8892a8]">Employee Performance Summary</h3>
-        <span className="rounded-full bg-[#141927] border border-[#1a2035] px-2.5 py-0.5 text-xs font-medium text-[#5a6480]">
+        <h3 className="text-sm font-medium text-muted-foreground">Employee Performance Summary</h3>
+        <span className="rounded-full bg-card border border-border px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
           {employeeData.length} employees
         </span>
       </div>
@@ -43,25 +43,25 @@ export default function Element3() {
                 onClick={() => handleEmployeeClick(emp.name)}
                 className={`cursor-pointer flex items-center justify-between rounded-md border p-3 transition-colors ${
                   isActive
-                    ? 'border-[#2a3555] bg-[#141927]'
-                    : 'border-[#1a2035] bg-[#0c0f18] hover:bg-[#0f1320]'
+                    ? 'border-[hsl(var(--ring)/0.3)] bg-card'
+                    : 'border-border bg-background hover:bg-card'
                 }`}
               >
                 <div className="min-w-0 flex-1">
                   <p className={`truncate text-sm font-medium ${
-                    isActive ? 'text-[#b0bbd0]' : 'text-[#8892a8]'
+                    isActive ? 'text-foreground' : 'text-muted-foreground'
                   }`}>{emp.name}</p>
-                  <p className="text-xs text-[#3d4560]">{emp.count} rows</p>
+                  <p className="text-xs text-muted-foreground/60">{emp.count} rows</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 overflow-hidden rounded-full bg-[#141927] h-1.5">
+                  <div className="w-12 overflow-hidden rounded-full bg-muted h-1.5">
                     <div
-                      className="h-full rounded-full bg-[#3a5a85] transition-all duration-500"
+                      className="h-full rounded-full bg-primary transition-all duration-500"
                       style={{ width: `${Math.min(emp.percentage, 100)}%` }}
                     />
                   </div>
                   <span className={`w-10 text-right text-xs font-semibold ${
-                    isActive ? 'text-[#b0bbd0]' : 'text-[#5a6480]'
+                    isActive ? 'text-foreground' : 'text-muted-foreground'
                   }`}>{emp.percentage}%</span>
                 </div>
               </motion.div>
@@ -69,7 +69,7 @@ export default function Element3() {
           })}
         </div>
       ) : (
-        <div className="py-8 text-center text-sm text-[#3d4560]">No employee data available for the current filters.</div>
+        <div className="py-8 text-center text-sm text-muted-foreground/60">No employee data available for the current filters.</div>
       )}
     </motion.div>
   );

@@ -5,9 +5,9 @@ import { useDashboardStore } from '../store/useDashboardStore';
 import { getBarChartData } from '../lib/utils';
 
 const COLORS = [
-  '#1e3a5f', '#2a4a6b', '#3a5a85', '#4a6590', '#5a7aaa',
-  '#6b8cba', '#8aa0be', '#a0b4cc',
-  '#5c4066', '#4a3050', '#6b2d4a', '#1e4055',
+  '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
+  '#f43f5e', '#22c55e', '#6366f1', '#ec4899', '#f97316',
+  '#06b6d4', '#8b5cf6',
 ];
 
 export default function StackedBarChart() {
@@ -79,22 +79,22 @@ export default function StackedBarChart() {
   const option = useMemo(() => ({
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'rgba(12,15,24,0.96)',
-      borderColor: 'rgba(42,53,85,0.5)',
+      backgroundColor: 'rgba(20,24,36,0.96)',
+      borderColor: 'rgba(42,47,69,0.5)',
       borderWidth: 1,
-      textStyle: { color: '#8892a8', fontSize: 13 },
+      textStyle: { color: '#c8cdd8', fontSize: 13 },
       formatter: (params: { axisValue?: string; seriesName?: string; value?: number; marker?: string }[]) => {
         const date = (params[0]?.axisValue as string) || '';
-        let html = `<div style="font-weight:600;margin-bottom:6px;color:#8892a8;">${date}</div>`;
+        let html = `<div style="font-weight:600;margin-bottom:6px;color:#c8cdd8;">${date}</div>`;
         for (const p of params) {
-          html += `<div style="display:flex;justify-content:space-between;gap:16px;color:#5a6480;">
+          html += `<div style="display:flex;justify-content:space-between;gap:16px;color:#6b7394;">
             <span>${p.marker} ${p.seriesName}:</span>
-            <strong style="color:#8892a8;">${p.value}</strong>
+            <strong style="color:#c8cdd8;">${p.value}</strong>
           </div>`;
         }
         const row = barData.find(d => d.date === date);
         if (row) {
-          html += `<div style="border-top:1px solid rgba(42,53,85,0.3);margin-top:6px;padding-top:4px;font-weight:600;color:#8892a8;">
+          html += `<div style="border-top:1px solid rgba(42,47,69,0.3);margin-top:6px;padding-top:4px;font-weight:600;color:#c8cdd8;">
             Total RTS: ${row.total}
           </div>`;
         }
@@ -104,7 +104,7 @@ export default function StackedBarChart() {
     legend: {
       data: codes,
       top: 0,
-      textStyle: { fontSize: 11, color: '#5a6480' },
+      textStyle: { fontSize: 11, color: '#6b7394' },
       itemWidth: 12,
       itemHeight: 10,
     },
@@ -114,7 +114,7 @@ export default function StackedBarChart() {
       data: dates,
       axisLabel: {
         fontSize: 11,
-        color: '#4a5578',
+        color: '#6b7394',
         rotate: 45,
         interval: 'auto',
         formatter: (val: string) => {
@@ -123,13 +123,13 @@ export default function StackedBarChart() {
           return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         },
       },
-      axisLine: { lineStyle: { color: 'rgba(42,53,85,0.3)' } },
+      axisLine: { lineStyle: { color: 'rgba(42,47,69,0.3)' } },
       axisTick: { show: false },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { fontSize: 11, color: '#4a5578' },
-      splitLine: { lineStyle: { color: 'rgba(42,53,85,0.15)', type: 'dashed' } },
+      axisLabel: { fontSize: 11, color: '#6b7394' },
+      splitLine: { lineStyle: { color: 'rgba(42,47,69,0.15)', type: 'dashed' } },
       axisLine: { show: false },
     },
     dataZoom: [
@@ -141,7 +141,7 @@ export default function StackedBarChart() {
         bottom: 10,
         height: 20,
         handleSize: '80%',
-        borderColor: 'rgba(42,53,85,0.4)',
+        borderColor: 'rgba(42,47,69,0.4)',
         fillerColor: 'rgba(30,58,95,0.3)',
       },
       { type: 'inside' as const, xAxisIndex: [0], start: 0, end: 100 },
@@ -154,12 +154,12 @@ export default function StackedBarChart() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
-      className="rounded-lg border border-[#1a2035] bg-[#0f1320]/50 p-5"
+      className="rounded-lg border border-border bg-card/50 p-5"
     >
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-[#8892a8]">Daily RTS Trends</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">Daily RTS Trends</h3>
       </div>
-      <p className="mb-3 text-xs text-[#3d4560]">
+      <p className="mb-3 text-xs text-muted-foreground">
         Stacked bars show RTS codes by day. Click a bar to filter to that date.
       </p>
       <ReactECharts
