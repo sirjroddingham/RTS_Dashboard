@@ -23,9 +23,13 @@ export interface ChartThemeColors {
   zoomFill: string;
 }
 
-function parseRgbaVar(v: string): string {
+function toRgba(v: string, alpha?: number): string {
   const parts = v.trim().split(/\s+/);
+  if (parts.length >= 3 && alpha !== undefined) {
+    return `rgba(${parts.slice(0, 3).join(',')},${alpha})`;
+  }
   if (parts.length === 4) return `rgba(${parts.join(',')})`;
+  if (parts.length === 3) return `rgb(${parts.join(',')})`;
   return v.trim();
 }
 
@@ -33,21 +37,21 @@ export function getChartTheme(): ChartThemeColors {
   const s = getComputedStyle(document.documentElement);
   const get = (v: string) => s.getPropertyValue(v).trim();
   return {
-    tooltipBg: `rgba(${get('--chart-tooltip-bg-alpha')})`,
-    tooltipBorder: `rgba(${get('--chart-tooltip-border')})`,
-    tooltipText: `rgb(${get('--chart-tooltip-text')})`,
-    tooltipMuted: `rgb(${get('--chart-tooltip-muted')})`,
-    tooltipHoverBg: `rgba(${get('--chart-tooltip-hover-bg')}, 0.9)`,
-    tooltipHoverBorder: `rgba(${get('--chart-tooltip-hover-border')}, 0.3)`,
-    axisText: `rgb(${get('--chart-axis-text')})`,
-    axisLine: `rgba(${get('--chart-axis-line')}, 0.3)`,
-    gridLine: parseRgbaVar(get('--chart-grid-line')),
-    pieBorder: `rgb(${get('--chart-pie-border')})`,
-    pieLabel: `rgb(${get('--chart-pie-label')})`,
-    pieLabelName: `rgb(${get('--chart-pie-label-name')})`,
-    pieLine: `rgb(${get('--chart-pie-line')})`,
-    zoomBorder: parseRgbaVar(get('--chart-zoom-border')),
-    zoomFill: parseRgbaVar(get('--chart-zoom-fill')),
+    tooltipBg: toRgba(get('--chart-tooltip-bg-alpha')),
+    tooltipBorder: toRgba(get('--chart-tooltip-border')),
+    tooltipText: toRgba(get('--chart-tooltip-text')),
+    tooltipMuted: toRgba(get('--chart-tooltip-muted')),
+    tooltipHoverBg: toRgba(get('--chart-tooltip-hover-bg'), 0.9),
+    tooltipHoverBorder: toRgba(get('--chart-tooltip-hover-border'), 0.3),
+    axisText: toRgba(get('--chart-axis-text')),
+    axisLine: toRgba(get('--chart-axis-line'), 0.3),
+    gridLine: toRgba(get('--chart-grid-line')),
+    pieBorder: toRgba(get('--chart-pie-border')),
+    pieLabel: toRgba(get('--chart-pie-label')),
+    pieLabelName: toRgba(get('--chart-pie-label-name')),
+    pieLine: toRgba(get('--chart-pie-line')),
+    zoomBorder: toRgba(get('--chart-zoom-border')),
+    zoomFill: toRgba(get('--chart-zoom-fill')),
   };
 }
 
