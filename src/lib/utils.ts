@@ -5,6 +5,52 @@ export interface PieDataItem {
   value: number;
 }
 
+export interface ChartThemeColors {
+  tooltipBg: string;
+  tooltipBorder: string;
+  tooltipText: string;
+  tooltipMuted: string;
+  tooltipHoverBg: string;
+  tooltipHoverBorder: string;
+  axisText: string;
+  axisLine: string;
+  gridLine: string;
+  pieBorder: string;
+  pieLabel: string;
+  pieLabelName: string;
+  pieLine: string;
+  zoomBorder: string;
+  zoomFill: string;
+}
+
+function parseRgbaVar(v: string): string {
+  const parts = v.trim().split(/\s+/);
+  if (parts.length === 4) return `rgba(${parts.join(',')})`;
+  return v.trim();
+}
+
+export function getChartTheme(): ChartThemeColors {
+  const s = getComputedStyle(document.documentElement);
+  const get = (v: string) => s.getPropertyValue(v).trim();
+  return {
+    tooltipBg: `rgba(${get('--chart-tooltip-bg-alpha')})`,
+    tooltipBorder: `rgba(${get('--chart-tooltip-border')})`,
+    tooltipText: `rgb(${get('--chart-tooltip-text')})`,
+    tooltipMuted: `rgb(${get('--chart-tooltip-muted')})`,
+    tooltipHoverBg: `rgba(${get('--chart-tooltip-hover-bg')}, 0.25)`,
+    tooltipHoverBorder: `rgba(${get('--chart-tooltip-hover-border')}, 0.3)`,
+    axisText: `rgb(${get('--chart-axis-text')})`,
+    axisLine: `rgba(${get('--chart-axis-line')}, 0.3)`,
+    gridLine: parseRgbaVar(get('--chart-grid-line')),
+    pieBorder: `rgb(${get('--chart-pie-border')})`,
+    pieLabel: `rgb(${get('--chart-pie-label')})`,
+    pieLabelName: `rgb(${get('--chart-pie-label-name')})`,
+    pieLine: `rgb(${get('--chart-pie-line')})`,
+    zoomBorder: parseRgbaVar(get('--chart-zoom-border')),
+    zoomFill: parseRgbaVar(get('--chart-zoom-fill')),
+  };
+}
+
 export interface BarChartDataItem {
   date: string;
   counts: Record<string, number>;

@@ -1,28 +1,130 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 222 26% 11%;
-    --foreground: 210 40% 96%;
-    --card: 222 26% 16%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 26% 16%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 45 93% 47%;
-    --primary-foreground: 222 26% 11%;
-    --secondary: 168 73% 42%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 222 26% 19%;
-    --muted-foreground: 215 16% 62%;
-    --accent: 25 95% 53%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 84% 58%;
-    --destructive-foreground: 210 40% 96%;
-    --border: 222 26% 22%;
-    --input: 222 26% 18%;
-    --ring: 45 93% 47%;
-    --radius: 0.375rem;
-  }
+@theme {
+  --color-surface-0: hsl(var(--surface-0));
+  --color-surface-1: hsl(var(--surface-1));
+  --color-surface-2: hsl(var(--surface-2));
+  --color-surface-3: hsl(var(--surface-3));
+  --color-surface-hover: hsl(var(--surface-hover));
+  --color-text-heading: hsl(var(--text-heading));
+  --color-text-body: hsl(var(--text-body));
+  --color-text-subtle: hsl(var(--text-subtle));
+  --color-text-faint: hsl(var(--text-faint));
+  --color-text-icon: hsl(var(--text-icon));
+  --color-rts-active-bg: hsl(var(--rts-active-bg));
+  --color-rts-active-text: hsl(var(--rts-active-text));
+}
+
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 25 95% 53%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 168 73% 42%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 210 4% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 25 95% 53%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 210 4% 96%;
+  --ring: 25 95% 53%;
+  --radius: 0.375rem;
+
+  --surface-0: 0 0% 100%;
+  --surface-1: 210 4% 98%;
+  --surface-2: 214 32% 94%;
+  --surface-3: 214 32% 91%;
+  --surface-hover: 214 32% 94%;
+
+  --text-heading: 222 47% 11%;
+  --text-body: 215 16% 35%;
+  --text-subtle: 215 16% 47%;
+  --text-faint: 215 14% 60%;
+  --text-icon: 214 20% 40%;
+
+  --chart-tooltip-bg: 255 255 255;
+  --chart-tooltip-bg-alpha: 255 255 255 0.96;
+  --chart-tooltip-border: 203 213 225;
+  --chart-tooltip-text: 51 65 85;
+  --chart-tooltip-muted: 100 116 139;
+  --chart-tooltip-hover-bg: 241 245 249;
+  --chart-tooltip-hover-border: 59 130 246;
+  --chart-axis-text: 100 116 139;
+  --chart-axis-line: 203 213 225;
+  --chart-grid-line: rgba(203, 213, 225, 0.4);
+  --chart-pie-border: 226 232 240;
+  --chart-pie-label: 100 116 139;
+  --chart-pie-label-name: 51 65 85;
+  --chart-pie-line: 148 163 184;
+  --chart-zoom-border: rgba(148, 163, 184, 0.4);
+  --chart-zoom-fill: rgba(59, 130, 246, 0.15);
+
+  --rts-active-bg: 37 91% 67%;
+  --rts-active-text: 0 0% 100%;
+}
+
+[data-theme="dark"] {
+  --background: 222 26% 11%;
+  --foreground: 210 40% 96%;
+  --card: 222 26% 16%;
+  --card-foreground: 210 40% 96%;
+  --popover: 222 26% 16%;
+  --popover-foreground: 210 40% 96%;
+  --primary: 45 93% 47%;
+  --primary-foreground: 222 26% 11%;
+  --secondary: 168 73% 42%;
+  --secondary-foreground: 210 40% 96%;
+  --muted: 222 26% 19%;
+  --muted-foreground: 215 16% 62%;
+  --accent: 25 95% 53%;
+  --accent-foreground: 210 40% 96%;
+  --destructive: 0 84% 58%;
+  --destructive-foreground: 210 40% 96%;
+  --border: 222 26% 22%;
+  --input: 222 26% 18%;
+  --ring: 45 93% 47%;
+  --radius: 0.375rem;
+
+  --surface-0: 222 26% 11%;
+  --surface-1: 217 33% 14%;
+  --surface-2: 216 36% 11%;
+  --surface-3: 222 26% 22%;
+  --surface-hover: 216 36% 16%;
+
+  --text-heading: 212 23% 84%;
+  --text-body: 217 15% 52%;
+  --text-subtle: 215 16% 62%;
+  --text-faint: 215 13% 38%;
+  --text-icon: 215 25% 48%;
+
+  --chart-tooltip-bg: 20 24 36;
+  --chart-tooltip-bg-alpha: 20 24 36 0.96;
+  --chart-tooltip-border: 42 47 69;
+  --chart-tooltip-text: 200 207 216;
+  --chart-tooltip-muted: 107 115 148;
+  --chart-tooltip-hover-bg: 42 47 69;
+  --chart-tooltip-hover-border: 107 159 212;
+  --chart-axis-text: 107 115 148;
+  --chart-axis-line: 42 47 69;
+  --chart-grid-line: rgba(42, 47, 69, 0.15);
+  --chart-pie-border: 22 25 37;
+  --chart-pie-label: 107 115 148;
+  --chart-pie-label-name: 200 207 216;
+  --chart-pie-line: 59 63 84;
+  --chart-zoom-border: rgba(42, 47, 69, 0.4);
+  --chart-zoom-fill: rgba(30, 58, 95, 0.3);
+
+  --rts-active-bg: 212 55% 60%;
+  --rts-active-text: 222 26% 11%;
 }
 
 @layer base {
@@ -65,13 +167,20 @@
 
 /* Date picker calendar popup theming */
 input[type="date"] {
-  color-scheme: dark;
+  color-scheme: light;
   position: relative;
 }
 
+[data-theme="dark"] input[type="date"] {
+  color-scheme: dark;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: brightness(0) invert(1);
   cursor: pointer;
+}
+
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(1);
 }
 
 input[type="date"]::-webkit-clear-button {

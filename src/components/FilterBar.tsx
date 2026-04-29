@@ -136,7 +136,7 @@ export default function FilterBar() {
                 onClick={() => toggleRTSCode(code)}
                 className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
                   filters.rtsCodes.includes(code)
-                    ? 'bg-[#6b9fd4] text-[#0c0f18]'
+                    ? 'bg-rts-active-bg text-rts-active-text'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >

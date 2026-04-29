@@ -2,7 +2,7 @@ import { useMemo, useRef, useEffect, useCallback } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { motion } from 'framer-motion';
 import { useDashboardStore } from '../store/useDashboardStore';
-import { getBarChartData } from '../lib/utils';
+import { getBarChartData, getChartTheme } from '../lib/utils';
 
 const COLORS = [
   '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
@@ -44,7 +44,9 @@ export default function StackedBarChart() {
     }));
   }, [barData, codes]);
 
-useEffect(() => {
+  const theme = useMemo(() => getChartTheme(), []);
+
+  useEffect(() => {
     const chart = chartRef.current?.getEchartsInstance();
     if (!chart) return;
 
@@ -100,20 +102,20 @@ useEffect(() => {
   const option = useMemo(() => ({
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'rgba(20,24,36,0.96)',
-      borderColor: 'rgba(42,47,69,0.5)',
+      backgroundColor: theme.tooltipBg,
+      borderColor: theme.tooltipBorder,
       borderWidth: 1,
-      textStyle: { color: '#c8cdd8', fontSize: 13 },
+      textStyle: { color: theme.tooltipText, fontSize: 13 },
       formatter: (params: { axisValue?: string; seriesName?: string; value?: number; marker?: string; color?: string }[]) => {
         const date = (params[0]?.axisValue as string) || '';
         const hovered = hoveredSeries.current;
-        let html = `<div style="font-weight:600;margin-bottom:6px;color:#c8cdd8;">${date}</div>`;
+        let html = `<div style="font-weight:600;margin-bottom:6px;color:${theme.tooltipText};">${date}</div>`;
         for (const p of params) {
           const isHovered = p.seriesName === hovered;
-          const rowColor = isHovered ? '#c8cdd8' : '#6b7394';
+          const rowColor = isHovered ? theme.tooltipText : theme.tooltipMuted;
           const fontWeight = isHovered ? '600' : '400';
-          const bgColor = isHovered ? 'rgba(42,47,69,0.25)' : 'transparent';
-          const borderColor = isHovered ? 'rgba(107,159,212,0.3)' : 'transparent';
+          const bgColor = isHovered ? theme.tooltipHoverBg : 'transparent';
+          const borderColor = isHovered ? theme.tooltipHoverBorder : 'transparent';
           const dotColor = p.color || '';
           html += `<div style="display:flex;justify-content:space-between;gap:16px;color:${rowColor};font-weight:${fontWeight};background:${bgColor};border-left:2px solid ${borderColor};padding:2px 6px;">
             <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dotColor};margin-right:6px;"></span>${p.seriesName}:</span>
@@ -122,7 +124,7 @@ useEffect(() => {
         }
         const row = barData.find(d => d.date === date);
         if (row) {
-          html += `<div style="border-top:1px solid rgba(42,47,69,0.3);margin-top:6px;padding-top:4px;font-weight:600;color:#c8cdd8;">
+          html += `<div style="border-top:1px solid ${theme.axisLine};margin-top:6px;padding-top:4px;font-weight:600;color:${theme.tooltipText};">
             Total RTS: ${row.total}
           </div>`;
         }
@@ -136,7 +138,7 @@ useEffect(() => {
       data: dates,
       axisLabel: {
         fontSize: 11,
-        color: '#6b7394',
+        color: theme.axisText,
         rotate: 45,
         interval: 'auto',
         formatter: (val: string) => {
@@ -145,13 +147,13 @@ useEffect(() => {
           return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         },
       },
-      axisLine: { lineStyle: { color: 'rgba(42,47,69,0.3)' } },
+      axisLine: { lineStyle: { color: theme.axisLine } },
       axisTick: { show: false },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { fontSize: 11, color: '#6b7394' },
-      splitLine: { lineStyle: { color: 'rgba(42,47,69,0.15)', type: 'dashed' } },
+      axisLabel: { fontSize: 11, color: theme.axisText },
+      splitLine: { lineStyle: { color: theme.gridLine, type: 'dashed' } },
       axisLine: { show: false },
     },
     dataZoom: [
@@ -163,13 +165,13 @@ useEffect(() => {
         bottom: 10,
         height: 20,
         handleSize: '80%',
-        borderColor: 'rgba(42,47,69,0.4)',
-        fillerColor: 'rgba(30,58,95,0.3)',
+        borderColor: theme.zoomBorder,
+        fillerColor: theme.zoomFill,
       },
       { type: 'inside' as const, xAxisIndex: [0], start: 0, end: 100 },
     ],
     series,
-  }), [barData, codes, dates, series]);
+  }), [barData, codes, dates, series, theme]);
 
   return (
     <motion.div

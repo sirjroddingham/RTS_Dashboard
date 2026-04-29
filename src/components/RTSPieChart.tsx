@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { motion } from 'framer-motion';
 import { useDashboardStore } from '../store/useDashboardStore';
-import { getRTSDistribution } from '../lib/utils';
+import { getRTSDistribution, getChartTheme } from '../lib/utils';
 
 const COLORS = [
   '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
@@ -16,20 +16,21 @@ export default function RTSPieChart() {
 
   const pieData = useMemo(() => getRTSDistribution(filteredData), [filteredData]);
   const total = useMemo(() => pieData.reduce((sum, d) => sum + d.value, 0), [pieData]);
+  const theme = useMemo(() => getChartTheme(), []);
 
   const option = useMemo(() => ({
     tooltip: {
       trigger: 'item',
       formatter: (params: { name: string; value: number }) => {
         const pct = total > 0 ? ((params.value / total) * 100).toFixed(1) : 0;
-        return `<div style="font-weight:600;margin-bottom:4px;color:#c8cdd8;">${params.name}</div>
-                <div style="color:#6b7394;">Count: <strong style="color:#c8cdd8;">${params.value}</strong></div>
-                <div style="color:#6b7394;">Percentage: <strong style="color:#c8cdd8;">${pct}%</strong></div>`;
+        return `<div style="font-weight:600;margin-bottom:4px;color:${theme.tooltipText};">${params.name}</div>
+                <div style="color:${theme.tooltipMuted};">Count: <strong style="color:${theme.tooltipText};">${params.value}</strong></div>
+                <div style="color:${theme.tooltipMuted};">Percentage: <strong style="color:${theme.tooltipText};">${pct}%</strong></div>`;
       },
-      backgroundColor: 'rgba(20,24,36,0.96)',
-      borderColor: 'rgba(42,47,69,0.5)',
+      backgroundColor: theme.tooltipBg,
+      borderColor: theme.tooltipBorder,
       borderWidth: 1,
-      textStyle: { color: '#c8cdd8', fontSize: 13 },
+      textStyle: { color: theme.tooltipText, fontSize: 13 },
     },
     legend: {
       show: false,
@@ -42,19 +43,19 @@ export default function RTSPieChart() {
       avoidLabelOverlap: true,
       itemStyle: {
         borderRadius: 6,
-        borderColor: '#161925',
+        borderColor: theme.pieBorder,
         borderWidth: 2,
       },
       label: {
         show: true,
         position: 'outside',
         fontSize: 10,
-        color: '#6b7394',
+        color: theme.pieLabel,
         formatter: (params: { name: string; percent: number }) =>
           params.percent > 1 ? `{name|${params.name}}\n{pct|${params.percent.toFixed(1)}%}` : '',
         rich: {
-          name: { fontSize: 10, color: '#c8cdd8', lineHeight: 14 },
-          pct: { fontSize: 9, color: '#6b7394', lineHeight: 12 },
+          name: { fontSize: 10, color: theme.pieLabelName, lineHeight: 14 },
+          pct: { fontSize: 9, color: theme.pieLabel, lineHeight: 12 },
         },
       },
       labelLine: {
@@ -62,7 +63,7 @@ export default function RTSPieChart() {
         length: 20,
         length2: 30,
         smooth: true,
-        lineStyle: { color: '#3b3f54', width: 1 },
+        lineStyle: { color: theme.pieLine, width: 1 },
       },
       emphasis: {
         scale: true,
@@ -85,7 +86,7 @@ export default function RTSPieChart() {
     }],
     animationDuration: 800,
     animationEasing: 'cubicOut',
-  }), [pieData, total]);
+  }), [pieData, total, theme]);
 
   return (
     <motion.div

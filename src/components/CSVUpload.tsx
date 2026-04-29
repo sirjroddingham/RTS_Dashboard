@@ -143,7 +143,7 @@ export default function CSVUpload({ compact = false }: CSVUploadProps) {
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onClick={() => fileInputRef.current?.click()}
-          className="cursor-pointer rounded p-1.5 text-[#5a6480] transition-colors hover:bg-[#141927] hover:text-[#8892a8]"
+          className="cursor-pointer rounded p-1.5 text-text-body transition-colors hover:bg-surface-hover hover:text-text-subtle"
         >
           <input
             ref={fileInputRef}
@@ -180,7 +180,7 @@ export default function CSVUpload({ compact = false }: CSVUploadProps) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={() => fileInputRef.current?.click()}
-        className="relative cursor-pointer rounded-lg border-2 border-dashed border-[#1a2035] bg-[#0f1320]/50 p-8 text-center transition-colors hover:border-[#2a3555] hover:bg-[#141927]"
+        className="relative cursor-pointer rounded-lg border-2 border-dashed border-surface-3 bg-surface-2/50 p-8 text-center transition-colors hover:border-surface-hover hover:bg-surface-hover"
       >
         <input
           ref={fileInputRef}
@@ -190,10 +190,10 @@ export default function CSVUpload({ compact = false }: CSVUploadProps) {
           className="hidden"
           onChange={handleFileChange}
         />
-        <Upload className="mx-auto mb-3 h-10 w-10 text-[#3d4560]" />
-        <p className="mb-1 text-lg font-medium text-[#8892a8]">Drop CSV files here or click to browse</p>
-        <p className="text-sm text-[#5a6480]">Upload 1 or more weekly CSV files to combine</p>
-        <div className="mt-4 flex items-center justify-center gap-4 text-xs text-[#3d4560]">
+        <Upload className="mx-auto mb-3 h-10 w-10 text-text-faint" />
+        <p className="mb-1 text-lg font-medium text-text-subtle">Drop CSV files here or click to browse</p>
+        <p className="text-sm text-text-body">Upload 1 or more weekly CSV files to combine</p>
+        <div className="mt-4 flex items-center justify-center gap-4 text-xs text-text-faint">
           <div className="flex items-center gap-1.5">
             <FileSpreadsheet className="h-3 w-3" />
             <span>Auto-maps column headers</span>

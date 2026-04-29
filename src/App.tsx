@@ -17,23 +17,23 @@ function Dashboard() {
   const filteredData = useDashboardStore(s => s.filteredData);
 
   return (
-    <div className="min-h-screen bg-[#0c0f18]">
-      <header className="border-b border-[#1a2035] sticky top-0 z-50 bg-[#0c0f18]/90 backdrop-blur-md">
+    <div className="min-h-screen bg-surface-0">
+      <header className="border-b border-surface-3 sticky top-0 z-50 bg-surface-0/90 backdrop-blur-md">
         <div className="mx-auto max-w-[1600px] px-4 py-3 sm:px-6">
            <div className="flex items-center justify-between">
              <div className="flex items-center gap-3">
                <img src={D20Logo} alt="D20 Industries" className="h-10 w-10" />
                <div>
-                 <h1 className="text-sm font-medium text-[#c0cce0]">RTS Dashboard</h1>
-                 <p className="text-xs text-[#5a6480]">D20 Industries, LLC</p>
+                 <h1 className="text-sm font-medium text-text-heading">RTS Dashboard</h1>
+                 <p className="text-xs text-text-body">D20 Industries, LLC</p>
                </div>
              </div>
             <div className="flex items-center gap-3">
               <ThemeToggle />
               {fileName && (
-                <div className="flex items-center gap-2 rounded-md bg-[#141927] border border-[#1a2035] px-3 py-1.5">
-                  <FileText className="h-3.5 w-3.5 text-[#5a6480]" />
-                  <span className="text-xs text-[#8892a8]">{fileName}</span>
+                <div className="flex items-center gap-2 rounded-md bg-surface-1 border border-surface-3 px-3 py-1.5">
+                  <FileText className="h-3.5 w-3.5 text-text-body" />
+                  <span className="text-xs text-text-subtle">{fileName}</span>
                 </div>
               )}
               <CSVUpload compact />
@@ -70,7 +70,7 @@ function Dashboard() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-xs text-[#5a6480]"
+                  className="text-xs text-text-body"
                 >
                   Showing {filteredData.length.toLocaleString()} of {rawData.length.toLocaleString()} records
                 </motion.div>
@@ -88,8 +88,8 @@ function Dashboard() {
         </AnimatePresence>
       </main>
 
-      <footer className="border-t border-[#1a2035] py-3 bg-[#0c0f18]/50 backdrop-blur-sm">
-        <div className="mx-auto max-w-[1600px] px-4 text-center text-xs text-[#3d4560]">
+      <footer className="border-t border-surface-3 py-3 bg-surface-0/50 backdrop-blur-sm">
+        <div className="mx-auto max-w-[1600px] px-4 text-center text-xs text-text-faint">
           RTS Dashboard &middot; D20 Industries, LLC
         </div>
       </footer>
