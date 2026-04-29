@@ -134,10 +134,10 @@ export default function FilterBar() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => toggleRTSCode(code)}
-                className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
                   filters.rtsCodes.includes(code)
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-card text-muted-foreground hover:bg-border hover:text-foreground'
+                    ? 'bg-[#6b9fd4] text-[#0c0f18]'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {code}
