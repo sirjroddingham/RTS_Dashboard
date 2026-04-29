@@ -7,7 +7,8 @@ import { getRTSDistribution } from '../lib/utils';
 const COLORS = [
   '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
   '#f43f5e', '#22c55e', '#6366f1', '#ec4899', '#f97316',
-  '#06b6d4', '#8b5cf6',
+  '#06b6d4', '#8b5cf6', '#ef4444', '#10b981', '#f59e0b',
+  '#6ee7b7', '#c084fc',
 ];
 
 export default function RTSPieChart() {
@@ -31,19 +32,13 @@ export default function RTSPieChart() {
       textStyle: { color: '#c8cdd8', fontSize: 13 },
     },
     legend: {
-      orient: 'vertical',
-      right: 0,
-      top: 'center',
-      textStyle: { fontSize: 11, color: '#6b7394' },
-      itemWidth: 10,
-      itemHeight: 10,
-      itemGap: 6,
+      show: false,
     },
     series: [{
       name: 'RTS Codes',
       type: 'pie',
-      radius: ['35%', '65%'],
-      center: ['30%', '50%'],
+      radius: ['40%', '65%'],
+      center: ['50%', '50%'],
       avoidLabelOverlap: true,
       itemStyle: {
         borderRadius: 6,
@@ -51,10 +46,23 @@ export default function RTSPieChart() {
         borderWidth: 2,
       },
       label: {
-        show: false,
+        show: true,
+        position: 'outside',
+        fontSize: 10,
+        color: '#6b7394',
+        formatter: (params: { name: string; percent: number }) =>
+          params.percent > 1 ? `{name|${params.name}}\n{pct|${params.percent.toFixed(1)}%}` : '',
+        rich: {
+          name: { fontSize: 10, color: '#c8cdd8', lineHeight: 14 },
+          pct: { fontSize: 9, color: '#6b7394', lineHeight: 12 },
+        },
       },
       labelLine: {
-        show: false,
+        show: true,
+        length: 20,
+        length2: 30,
+        smooth: true,
+        lineStyle: { color: '#3b3f54', width: 1 },
       },
       emphasis: {
         scale: true,
