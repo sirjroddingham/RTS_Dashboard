@@ -15,6 +15,7 @@ export default function StackedBarChart() {
   const filters = useDashboardStore(s => s.filters);
   const setFilters = useDashboardStore(s => s.setFilters);
   const chartRef = useRef<ReactECharts>(null);
+  const hoveredSeries = useRef<string | null>(null);
 
   const barData = useMemo(() => getBarChartData(filteredData), [filteredData]);
   const dates = useMemo(() => barData.map(d => d.date), [barData]);
@@ -42,6 +43,26 @@ export default function StackedBarChart() {
       barWidth: '60%',
     }));
   }, [barData, codes]);
+
+useEffect(() => {
+    const chart = chartRef.current?.getEchartsInstance();
+    if (!chart) return;
+
+    const handleMouseMove = (params: { seriesIndex?: number; seriesName?: string }) => {
+      hoveredSeries.current = params.seriesName || null;
+    };
+    const handleMouseOut = () => {
+      hoveredSeries.current = null;
+    };
+
+    chart.on('mousemove', handleMouseMove);
+    chart.on('globalout', handleMouseOut);
+
+    return () => {
+      chart.off('mousemove', handleMouseMove);
+      chart.off('globalout', handleMouseOut);
+    };
+  }, [codes]);
 
   const isSameDay = (a: Date, b: Date) =>
     a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -83,13 +104,20 @@ export default function StackedBarChart() {
       borderColor: 'rgba(42,47,69,0.5)',
       borderWidth: 1,
       textStyle: { color: '#c8cdd8', fontSize: 13 },
-      formatter: (params: { axisValue?: string; seriesName?: string; value?: number; marker?: string }[]) => {
+      formatter: (params: { axisValue?: string; seriesName?: string; value?: number; marker?: string; color?: string }[]) => {
         const date = (params[0]?.axisValue as string) || '';
+        const hovered = hoveredSeries.current;
         let html = `<div style="font-weight:600;margin-bottom:6px;color:#c8cdd8;">${date}</div>`;
         for (const p of params) {
-          html += `<div style="display:flex;justify-content:space-between;gap:16px;color:#6b7394;">
-            <span>${p.marker} ${p.seriesName}:</span>
-            <strong style="color:#c8cdd8;">${p.value}</strong>
+          const isHovered = p.seriesName === hovered;
+          const rowColor = isHovered ? '#c8cdd8' : '#6b7394';
+          const fontWeight = isHovered ? '600' : '400';
+          const bgColor = isHovered ? 'rgba(42,47,69,0.25)' : 'transparent';
+          const borderColor = isHovered ? 'rgba(107,159,212,0.3)' : 'transparent';
+          const dotColor = p.color || '';
+          html += `<div style="display:flex;justify-content:space-between;gap:16px;color:${rowColor};font-weight:${fontWeight};background:${bgColor};border-left:2px solid ${borderColor};padding:2px 6px;">
+            <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dotColor};margin-right:6px;"></span>${p.seriesName}:</span>
+            <strong style="color:${rowColor};">${p.value}</strong>
           </div>`;
         }
         const row = barData.find(d => d.date === date);
@@ -101,14 +129,8 @@ export default function StackedBarChart() {
         return html;
       },
     },
-    legend: {
-      data: codes,
-      top: 0,
-      textStyle: { fontSize: 11, color: '#6b7394' },
-      itemWidth: 12,
-      itemHeight: 10,
-    },
-    grid: { left: 50, right: 20, top: 60, bottom: 80, containLabel: false },
+    legend: { show: false },
+    grid: { left: 50, right: 20, top: 10, bottom: 80, containLabel: false },
     xAxis: {
       type: 'category' as const,
       data: dates,
@@ -163,7 +185,6 @@ export default function StackedBarChart() {
         Stacked bars show RTS codes by day. Click a bar to filter to that date.
       </p>
       <ReactECharts
-        key={`${dates.length}x${codes.join(',')}`}
         ref={chartRef}
         option={option}
         style={{ height: 320, width: '100%' }}

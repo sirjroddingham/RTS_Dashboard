@@ -62,3 +62,24 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--border));
 }
+
+/* Date picker calendar popup theming */
+input[type="date"] {
+  color-scheme: dark;
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(1);
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-clear-button {
+  cursor: pointer;
+}
+
+/* Select dropdown option theming */
+select option {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}

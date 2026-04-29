@@ -8,7 +8,8 @@ import DetailTable from './components/DetailTable';
 import EmptyState from './components/EmptyState';
 import ThemeToggle from './components/ThemeToggle';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart3, FileText } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import D20Logo from '/just_the_d20.svg';
 
 function Dashboard() {
   const rawData = useDashboardStore(s => s.rawData);
@@ -19,16 +20,14 @@ function Dashboard() {
     <div className="min-h-screen bg-[#0c0f18]">
       <header className="border-b border-[#1a2035] sticky top-0 z-50 bg-[#0c0f18]/90 backdrop-blur-md">
         <div className="mx-auto max-w-[1600px] px-4 py-3 sm:px-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-[#1e3a5f]/40 p-2">
-                <BarChart3 className="h-5 w-5 text-[#6b9fd4]" />
-              </div>
-              <div>
-                <h1 className="text-sm font-medium text-[#c0cce0]">RTS Dashboard</h1>
-                <p className="text-xs text-[#5a6480]">Delivery Performance Analytics</p>
-              </div>
-            </div>
+           <div className="flex items-center justify-between">
+             <div className="flex items-center gap-3">
+               <img src={D20Logo} alt="D20 Industries" className="h-10 w-10" />
+               <div>
+                 <h1 className="text-sm font-medium text-[#c0cce0]">RTS Dashboard</h1>
+                 <p className="text-xs text-[#5a6480]">D20 Industries, LLC</p>
+               </div>
+             </div>
             <div className="flex items-center gap-3">
               <ThemeToggle />
               {fileName && (
@@ -91,7 +90,7 @@ function Dashboard() {
 
       <footer className="border-t border-[#1a2035] py-3 bg-[#0c0f18]/50 backdrop-blur-sm">
         <div className="mx-auto max-w-[1600px] px-4 text-center text-xs text-[#3d4560]">
-          RTS Management Dashboard &middot; Built with React, ECharts & Tailwind CSS
+          RTS Dashboard &middot; D20 Industries, LLC
         </div>
       </footer>
     </div>

@@ -103,9 +103,9 @@ export default function FilterBar() {
           onChange={(e) => setFilters({ employee: e.target.value })}
           className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         >
-          <option value="" className="bg-card">All Employees</option>
+          <option value="" style={{ background: 'hsl(var(--card))', color: 'hsl(var(--card-foreground))' }}>All Employees</option>
           {employees.map(emp => (
-            <option key={emp} value={emp} className="bg-card">{emp}</option>
+            <option key={emp} value={emp} style={{ background: 'hsl(var(--card))', color: 'hsl(var(--card-foreground))' }}>{emp}</option>
           ))}
         </select>
  
