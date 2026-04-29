@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import Papa from 'papaparse';
-import { Upload, FileSpreadsheet, AlertCircle } from 'lucide-react';
+import { Upload, FileSpreadsheet, AlertCircle, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useDashboardStore } from '../store/useDashboardStore';
 import { mapCsvHeaders, parseDate, normalizeRTSCode } from '../lib/headerMap';
@@ -10,84 +10,126 @@ interface CSVUploadProps {
   compact?: boolean;
 }
 
+interface ParseResult {
+  data: RTSDataRow[];
+  warnings: string[];
+  fileName: string;
+}
+
+function parseSingleCsv(csvText: string, fileName: string): ParseResult {
+  const warnings: string[] = [];
+  const result = Papa.parse<Record<string, string>>(csvText, { header: true, skipEmptyLines: true, worker: false, download: false });
+
+  if (result.errors.length > 0) {
+    warnings.push(`${fileName}: ${result.errors.length} parse errors.`);
+  }
+
+  const headers = result.meta?.fields || [];
+  const mapping = mapCsvHeaders(headers);
+
+  if (Object.keys(mapping).length === 0) {
+    warnings.push(`${fileName}: Could not map any CSV headers.`);
+    return { data: [], warnings, fileName };
+  }
+
+  const rowsWithExtras = (result.data as any[]).filter(
+    row => row.__parsed_extra && row.__parsed_extra.length > 0
+  );
+
+  if (rowsWithExtras.length > 0) {
+    warnings.push(`${fileName}: ${rowsWithExtras.length} rows have garbled data (missing line breaks).`);
+  }
+
+  const data: RTSDataRow[] = result.data.map((row, idx) => {
+    const getValue = (key: string) => (mapping[key] !== undefined && row[headers[mapping[key]]] !== undefined) ? row[headers[mapping[key]]] : '';
+    return {
+      _id: `${fileName}-${idx}-${Date.now()}`,
+      deliveryAssociate: getValue('deliveryAssociate'),
+      trackingId: getValue('trackingId'),
+      transporterId: getValue('transporterId'),
+      impactDcr: getValue('impactDcr'),
+      rtsCode: normalizeRTSCode(getValue('rtsCode')),
+      additionalInformation: getValue('additionalInformation'),
+      exemptionReason: getValue('exemptionReason'),
+      plannedDeliveryDate: getValue('plannedDeliveryDate'),
+      serviceArea: getValue('serviceArea'),
+      normalizedDate: parseDate(getValue('plannedDeliveryDate')),
+    };
+  });
+
+  return { data, warnings, fileName };
+}
+
 export default function CSVUpload({ compact = false }: CSVUploadProps) {
   const setRawData = useDashboardStore(s => s.setRawData);
   const setFileName = useDashboardStore(s => s.setFileName);
   const [error, setErrorState] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const processCsv = useCallback((csvText: string) => {
-    const result = Papa.parse<Record<string, string>>(csvText, { header: true, skipEmptyLines: true, worker: false, download: false });
-
-    if (result.errors.length > 0) {
-      setErrorState(`Parse errors: ${result.errors.length} issues found. Check CSV format.`);
-      return;
-    }
-
-    const headers = result.meta?.fields || [];
-    const mapping = mapCsvHeaders(headers);
-
-    if (Object.keys(mapping).length === 0) {
-      setErrorState('Could not map any CSV headers. Ensure headers match expected column names.');
-      return;
-    }
-
-    const data: RTSDataRow[] = result.data.map(row => {
-      const getValue = (key: string) => (mapping[key] !== undefined && row[headers[mapping[key]]] !== undefined) ? row[headers[mapping[key]]] : '';
-      return {
-        deliveryAssociate: getValue('deliveryAssociate'),
-        trackingId: getValue('trackingId'),
-        transporterId: getValue('transporterId'),
-        impactDcr: getValue('impactDcr'),
-        rtsCode: normalizeRTSCode(getValue('rtsCode')),
-        additionalInformation: getValue('additionalInformation'),
-        exemptionReason: getValue('exemptionReason'),
-        plannedDeliveryDate: getValue('plannedDeliveryDate'),
-        serviceArea: getValue('serviceArea'),
-        normalizedDate: parseDate(getValue('plannedDeliveryDate')),
-      };
-    });
-
-    if (data.length === 0) {
-      setErrorState('No data rows found in CSV file.');
-      return;
-    }
-
-    setRawData(data);
-  }, [setRawData]);
-
-  const handleFile = useCallback((file: File) => {
+  const processFiles = useCallback((files: FileList | File[]) => {
     setErrorState(null);
-    setFileName(file.name);
+    const fileArray = Array.from(files).filter(
+      f => f.type === 'text/csv' || f.name.endsWith('.csv')
+    );
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
-      if (!text) {
-        setErrorState('Failed to read file content.');
+    if (fileArray.length === 0) {
+      setErrorState('Please select valid CSV files.');
+      return;
+    }
+
+    const readFile = (file: File): Promise<ParseResult> => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target?.result as string;
+          if (!text) {
+            resolve({ data: [], warnings: [`Failed to read ${file.name}.`], fileName: file.name });
+            return;
+          }
+          resolve(parseSingleCsv(text, file.name));
+        };
+        reader.onerror = () => {
+          resolve({ data: [], warnings: [`Failed to read ${file.name}.`], fileName: file.name });
+        };
+        reader.readAsText(file);
+      });
+    };
+
+    Promise.all(fileArray.map(f => readFile(f))).then(results => {
+      const allData = results.flatMap(r => r.data);
+      const allWarnings = results.flatMap(r => r.warnings);
+
+      if (allData.length === 0) {
+        setErrorState('No data rows found in any CSV file.');
         return;
       }
-      processCsv(text);
-    };
-    reader.onerror = () => {
-      setErrorState('Failed to read the file. Please try again.');
-    };
-    reader.readAsText(file);
-  }, [setFileName, processCsv]);
+
+      if (allWarnings.length > 0) {
+        setErrorState(allWarnings.join(' '));
+      }
+
+      const combinedName = fileArray.length === 1
+        ? fileArray[0].name
+        : `${fileArray.length} files (${allData.length} rows)`;
+      setFileName(combinedName);
+      setRawData(allData);
+    });
+  }, [setRawData, setFileName]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && (file.type === 'text/csv' || file.name.endsWith('.csv'))) {
-      handleFile(file);
-    } else {
-      setErrorState('Please drop a valid CSV file.');
-    }
-  }, [handleFile]);
+    processFiles(e.dataTransfer.files);
+  }, [processFiles]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
   }, []);
+
+  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processFiles(e.target.files);
+    }
+  }, [processFiles]);
 
   if (compact) {
     return (
@@ -107,11 +149,9 @@ export default function CSVUpload({ compact = false }: CSVUploadProps) {
             ref={fileInputRef}
             type="file"
             accept=".csv"
+            multiple
             className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleFile(file);
-            }}
+            onChange={handleFileChange}
           />
           <Upload className="h-4 w-4" />
         </div>
@@ -130,9 +170,9 @@ export default function CSVUpload({ compact = false }: CSVUploadProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mb-3 flex items-center gap-2 rounded-md border border-red-900/30 bg-red-950/20 px-4 py-2 text-sm text-red-400/80"
+          className="mb-3 flex items-start gap-2 rounded-md border border-amber-900/30 bg-amber-950/20 px-4 py-2 text-sm text-amber-400/80"
         >
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
           {error}
         </motion.div>
       )}
@@ -146,18 +186,22 @@ export default function CSVUpload({ compact = false }: CSVUploadProps) {
           ref={fileInputRef}
           type="file"
           accept=".csv"
+          multiple
           className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) handleFile(file);
-          }}
+          onChange={handleFileChange}
         />
         <Upload className="mx-auto mb-3 h-10 w-10 text-[#3d4560]" />
-        <p className="mb-1 text-lg font-medium text-[#8892a8]">Drop CSV file here or click to browse</p>
-        <p className="text-sm text-[#5a6480]">Supports any CSV with delivery tracking data</p>
-        <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#3d4560]">
-          <FileSpreadsheet className="h-3 w-3" />
-          <span>Header mapping handles column name variations automatically</span>
+        <p className="mb-1 text-lg font-medium text-[#8892a8]">Drop CSV files here or click to browse</p>
+        <p className="text-sm text-[#5a6480]">Upload 1 or more weekly CSV files to combine</p>
+        <div className="mt-4 flex items-center justify-center gap-4 text-xs text-[#3d4560]">
+          <div className="flex items-center gap-1.5">
+            <FileSpreadsheet className="h-3 w-3" />
+            <span>Auto-maps column headers</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <FileText className="h-3 w-3" />
+            <span>Combines multiple files safely</span>
+          </div>
         </div>
       </div>
     </motion.div>

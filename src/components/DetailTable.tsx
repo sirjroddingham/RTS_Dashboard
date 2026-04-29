@@ -164,7 +164,7 @@ export default function DetailTable() {
             <AnimatePresence mode="popLayout">
               {paginatedData.map((row, index) => (
                 <motion.tr
-                  key={`${row.trackingId}-${index}`}
+                  key={row._id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}

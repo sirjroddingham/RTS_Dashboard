@@ -1,4 +1,5 @@
 export interface RTSDataRow {
+  _id: string;
   deliveryAssociate: string;
   trackingId: string;
   transporterId: string;
