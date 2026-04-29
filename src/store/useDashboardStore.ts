@@ -21,7 +21,7 @@ function applyFilters(rawData: RTSDataRow[], filters: DashboardFilters): RTSData
       if (!row.normalizedDate) return false;
       const [start, end] = filters.dateRange;
       if (start && row.normalizedDate < start) return false;
-      if (end && row.normalizedDate > end) return false;
+      if (end && row.normalizedDate >= end) return false;
     }
     if (filters.employee && row.deliveryAssociate.trim().toLowerCase() !== filters.employee.toLowerCase()) return false;
     if (filters.search) {
