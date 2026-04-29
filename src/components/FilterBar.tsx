@@ -15,6 +15,9 @@ export default function FilterBar() {
 
   const hasFilters = filters.employee || filters.search || filters.dateRange || filters.rtsCodes.length > 0;
 
+  const isSameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
   const handleSearchChange = (value: string) => {
     setFilters({ search: value });
   };
@@ -33,10 +36,14 @@ export default function FilterBar() {
 
   const handleDateEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const parts = e.target.value.split('-').map(Number);
-    const endDate = e.target.value
-      ? new Date(parts[0], parts[1] - 1, parts[2] + 1)
+    const selectedDate = e.target.value
+      ? new Date(parts[0], parts[1] - 1, parts[2])
       : null;
     const startDate = filters.dateRange?.[0] || null;
+    // If end date equals start date, store as-is (inclusive). Otherwise add +1 for exclusive upper bound.
+    const endDate = selectedDate
+      ? (startDate && isSameDay(selectedDate, startDate) ? selectedDate : new Date(selectedDate.getTime() + 86400000))
+      : null;
     setFilters({
       dateRange: endDate ? [startDate, endDate] : [startDate, null],
     });
@@ -50,6 +57,8 @@ export default function FilterBar() {
   };
 
   const displayEndDate = (d: Date): string => {
+    const startDate = filters.dateRange?.[0];
+    if (startDate && isSameDay(d, startDate)) return toInputDate(d);
     return toInputDate(new Date(d.getTime() - 86400000));
   };
 
