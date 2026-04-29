@@ -174,10 +174,11 @@ export default function DetailTable() {
                   <td className="px-4 py-2 text-foreground">{row.deliveryAssociate}</td>
                   <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{row.trackingId}</td>
                   <td className="px-4 py-2 text-center">
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      row.impactDcr === 'Y' ? 'bg-accent/20 text-accent' : 'bg-card text-muted-foreground'
-                    }`}>
-                      {row.impactDcr}
+                    <span className="flex items-center justify-center gap-1.5">
+                      <span className={`h-2 w-2 rounded-full ${
+                        row.impactDcr === 'Y' ? 'bg-red-500' : 'bg-green-500'
+                      }`}></span>
+                      <span className="text-xs font-medium">{row.impactDcr}</span>
                     </span>
                   </td>
                   <td className="px-4 py-2">
