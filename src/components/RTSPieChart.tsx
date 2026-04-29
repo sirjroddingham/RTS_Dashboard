@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { motion } from 'framer-motion';
 import { useDashboardStore } from '../store/useDashboardStore';
-import { getRTSDistribution, getChartTheme } from '../lib/utils';
+import { useChartTheme } from '../hooks/useChartTheme';
+import { getRTSDistribution } from '../lib/utils';
 
 const COLORS = [
   '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
@@ -13,10 +14,10 @@ const COLORS = [
 
 export default function RTSPieChart() {
   const filteredData = useDashboardStore(s => s.filteredData);
+  const theme = useChartTheme();
 
   const pieData = useMemo(() => getRTSDistribution(filteredData), [filteredData]);
   const total = useMemo(() => pieData.reduce((sum, d) => sum + d.value, 0), [pieData]);
-  const theme = useMemo(() => getChartTheme(), []);
 
   const option = useMemo(() => ({
     tooltip: {

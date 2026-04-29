@@ -24,13 +24,23 @@ export interface ChartThemeColors {
 }
 
 function toRgba(v: string, alpha?: number): string {
-  const parts = v.trim().split(/\s+/);
+  const trimmed = v.trim();
+  if (!trimmed) return 'transparent';
+
+  const rgbaMatch = trimmed.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*[\d.]+\s*)?\)/);
+  if (rgbaMatch) {
+    const [, r, g, b] = rgbaMatch;
+    if (alpha !== undefined) return `rgba(${r},${g},${b},${alpha})`;
+    return trimmed;
+  }
+
+  const parts = trimmed.split(/\s+/);
   if (parts.length >= 3 && alpha !== undefined) {
     return `rgba(${parts.slice(0, 3).join(',')},${alpha})`;
   }
   if (parts.length === 4) return `rgba(${parts.join(',')})`;
   if (parts.length === 3) return `rgb(${parts.join(',')})`;
-  return v.trim();
+  return trimmed;
 }
 
 export function getChartTheme(): ChartThemeColors {

@@ -56,8 +56,9 @@ export default function DetailTable() {
     return sorted;
   }, [filteredData, sortConfig, columnFilter]);
 
-  const totalPages = Math.ceil(sortedData.length / ROWS_PER_PAGE);
-  const paginatedData = sortedData.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(sortedData.length / ROWS_PER_PAGE));
+  const safePage = Math.min(page, totalPages - 1);
+  const paginatedData = sortedData.slice(safePage * ROWS_PER_PAGE, (safePage + 1) * ROWS_PER_PAGE);
 
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
@@ -212,56 +213,56 @@ export default function DetailTable() {
       {totalPages > 1 && (
         <div className="border-t border-border px-5 py-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">
-              Page {page + 1} of {totalPages} ({sortedData.length} records)
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setPage(0)}
-                disabled={page === 0}
-                className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
-              >
-                <ChevronsUp className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setPage(p => Math.max(0, p - 1))}
-                disabled={page === 0}
-                className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
-              >
-                Prev
-              </button>
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum: number;
-                if (totalPages <= 5) {
-                  pageNum = i;
-                } else if (page < 3) {
-                  pageNum = i;
-                } else if (page > totalPages - 4) {
-                  pageNum = totalPages - 5 + i;
-                } else {
-                  pageNum = page - 2 + i;
-                }
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setPage(pageNum)}
-                    className={`rounded px-2 py-1 text-xs font-medium ${
-                      page === pageNum
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground hover:bg-border'
-                    }`}
-                  >
-                    {pageNum + 1}
-                  </button>
-                );
-              })}
-              <button
-                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
-                disabled={page >= totalPages - 1}
-                className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
-              >
-                Next
-              </button>
+           <span className="text-xs text-muted-foreground">
+               Page {safePage + 1} of {totalPages} ({sortedData.length} records)
+             </span>
+             <div className="flex items-center gap-1">
+               <button
+                 onClick={() => setPage(0)}
+                 disabled={safePage === 0}
+                 className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
+               >
+                 <ChevronsUp className="h-4 w-4" />
+               </button>
+               <button
+                 onClick={() => setPage(p => Math.max(0, p - 1))}
+                 disabled={safePage === 0}
+                 className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
+               >
+                 Prev
+               </button>
+               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                 let pageNum: number;
+                 if (totalPages <= 5) {
+                   pageNum = i;
+                 } else if (safePage < 3) {
+                   pageNum = i;
+                 } else if (safePage > totalPages - 4) {
+                   pageNum = totalPages - 5 + i;
+                 } else {
+                   pageNum = safePage - 2 + i;
+                 }
+                 return (
+                   <button
+                     key={pageNum}
+                     onClick={() => setPage(pageNum)}
+                     className={`rounded px-2 py-1 text-xs font-medium ${
+                       safePage === pageNum
+                         ? 'bg-primary text-primary-foreground'
+                         : 'text-muted-foreground hover:bg-border'
+                     }`}
+                   >
+                     {pageNum + 1}
+                   </button>
+                 );
+               })}
+               <button
+                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                 disabled={safePage >= totalPages - 1}
+                 className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
+               >
+                 Next
+               </button>
             </div>
           </div>
         </div>

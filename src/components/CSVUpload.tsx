@@ -16,9 +16,15 @@ interface ParseResult {
   fileName: string;
 }
 
+type ParsedCsvRow = Record<string, string> & {
+  __parsed_extra?: string[];
+};
+
+let rowCounter = 0;
+
 function parseSingleCsv(csvText: string, fileName: string): ParseResult {
   const warnings: string[] = [];
-  const result = Papa.parse<Record<string, string>>(csvText, { header: true, skipEmptyLines: true, worker: false, download: false });
+  const result = Papa.parse<ParsedCsvRow>(csvText, { header: true, skipEmptyLines: true, worker: false, download: false });
 
   if (result.errors.length > 0) {
     warnings.push(`${fileName}: ${result.errors.length} parse errors.`);
@@ -32,7 +38,7 @@ function parseSingleCsv(csvText: string, fileName: string): ParseResult {
     return { data: [], warnings, fileName };
   }
 
-  const rowsWithExtras = (result.data as any[]).filter(
+  const rowsWithExtras = result.data.filter(
     row => row.__parsed_extra && row.__parsed_extra.length > 0
   );
 
@@ -41,9 +47,15 @@ function parseSingleCsv(csvText: string, fileName: string): ParseResult {
   }
 
   const data: RTSDataRow[] = result.data.map((row, idx) => {
-    const getValue = (key: string) => (mapping[key] !== undefined && row[headers[mapping[key]]] !== undefined) ? row[headers[mapping[key]]] : '';
+    const getValue = (key: string): string => {
+      const colIdx = mapping[key];
+      if (colIdx === undefined) return '';
+      const val = row[headers[colIdx]];
+      return val != null && typeof val === 'string' ? val : '';
+    };
+    const globalIdx = rowCounter++;
     return {
-      _id: `${fileName}-${idx}-${Date.now()}`,
+      _id: `${fileName}-${idx}-${globalIdx}`,
       deliveryAssociate: getValue('deliveryAssociate'),
       trackingId: getValue('trackingId'),
       transporterId: getValue('transporterId'),

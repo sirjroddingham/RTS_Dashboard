@@ -2,7 +2,8 @@ import { useMemo, useRef, useEffect, useCallback } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { motion } from 'framer-motion';
 import { useDashboardStore } from '../store/useDashboardStore';
-import { getBarChartData, getChartTheme } from '../lib/utils';
+import { useChartTheme } from '../hooks/useChartTheme';
+import { getBarChartData } from '../lib/utils';
 
 const COLORS = [
   '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
@@ -44,7 +45,7 @@ export default function StackedBarChart() {
     }));
   }, [barData, codes]);
 
-  const theme = useMemo(() => getChartTheme(), []);
+  const theme = useChartTheme();
 
   useEffect(() => {
     const chart = chartRef.current?.getEchartsInstance();
@@ -171,7 +172,7 @@ export default function StackedBarChart() {
       { type: 'inside' as const, xAxisIndex: [0], start: 0, end: 100 },
     ],
     series,
-  }), [barData, codes, dates, series, theme]);
+  }), [barData, dates, series, theme]);
 
   return (
     <motion.div

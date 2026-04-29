@@ -27,7 +27,7 @@ export default function FilterBar() {
     ) : null;
     const endDate = filters.dateRange?.[1] || null;
     setFilters({
-      dateRange: startDate && endDate ? [startDate, endDate] : startDate ? [startDate, null] : null,
+      dateRange: startDate ? [startDate, endDate] : [null, endDate],
     });
   };
 
@@ -38,7 +38,7 @@ export default function FilterBar() {
       : null;
     const startDate = filters.dateRange?.[0] || null;
     setFilters({
-      dateRange: startDate && endDate ? [startDate, endDate] : endDate ? [null, endDate] : null,
+      dateRange: endDate ? [startDate, endDate] : [startDate, null],
     });
   };
 
