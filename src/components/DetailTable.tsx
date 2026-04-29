@@ -79,32 +79,32 @@ export default function DetailTable() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
-      className="rounded-lg border border-[#1a2035] bg-[#0f1320]/50 backdrop-blur-sm"
+      className="rounded-lg border border-border bg-card/50 backdrop-blur-sm"
     >
-      <div className="border-b border-[#1a2035] px-5 py-4">
+      <div className="border-b border-border px-5 py-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-medium text-[#8892a8]">Delivery Details</h3>
+          <h3 className="text-sm font-medium text-muted-foreground">Delivery Details</h3>
           <div className="flex items-center gap-3">
-            <span className="rounded-full bg-[#141927] border border-[#1a2035] px-2.5 py-0.5 text-xs font-medium text-[#5a6480]">
+            <span className="rounded-full bg-card border border-border px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
               {sortedData.length} records
             </span>
             <button
               onClick={toggleSearch}
               className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
                 showSearch
-                  ? 'bg-[#1e3a5f]/40 text-[#7ab3e0]'
-                  : 'bg-[#141927] text-[#5a6480] hover:bg-[#1a2035]'
+                  ? 'bg-primary/40 text-primary'
+                  : 'bg-card text-muted-foreground hover:bg-border'
               }`}
             >
               <Search className="h-3.5 w-3.5" />
               Search Columns
               {hasSearchFilter && (
-                <span className="rounded-full bg-[#1e3a5f] px-1.5 py-0.5 text-[10px] text-[#7ab3e0]">1</span>
+                <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">1</span>
               )}
             </button>
           </div>
         </div>
-
+ 
         <AnimatePresence>
           {showSearch && (
             <motion.div
@@ -115,19 +115,19 @@ export default function DetailTable() {
               className="mt-3 overflow-hidden"
             >
               <div className="flex items-center gap-2">
-                <Search className="h-4 w-4 text-[#3d4560]" />
+                <Search className="h-4 w-4 text-muted-foreground" />
                 <input
                   ref={searchInputRef}
                   type="text"
                   value={columnFilter._global || ''}
                   onChange={(e) => handleSearch(e)}
                   placeholder="Type to filter across all visible columns..."
-                  className="flex-1 rounded-md border border-[#1a2035] bg-[#0c0f18] px-3 py-1.5 text-sm text-[#b0bbd0] placeholder:text-[#3d4560] focus:border-[#2a3555] focus:outline-none"
+                  className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                 />
                 {hasSearchFilter && (
                   <button
                     onClick={() => { setColumnFilter({}); setPage(0); }}
-                    className="text-xs text-[#5a6480] underline hover:text-[#8892a8]"
+                    className="text-xs text-muted-foreground underline hover:text-foreground"
                   >
                     Clear filters
                   </button>
@@ -137,16 +137,16 @@ export default function DetailTable() {
           )}
         </AnimatePresence>
       </div>
-
+ 
       <div className="max-h-[500px] overflow-y-auto">
         <table className="w-full text-sm">
           <thead className="sticky top-0 z-10">
-            <tr className="border-b border-[#1a2035] bg-[#0f1320] backdrop-blur-sm">
+            <tr className="border-b border-border bg-card backdrop-blur-sm">
               {COLUMNS.map(col => (
                 <th
                   key={col.key}
                   onClick={() => handleSort(col.key)}
-                  className={`cursor-pointer select-none px-4 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-[#4a5578] transition-colors hover:bg-[#141927] ${col.width}`}
+                  className={`cursor-pointer select-none px-4 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:bg-border ${col.width}`}
                 >
                   <div className="flex items-center gap-1">
                     {col.label}
@@ -169,13 +169,13 @@ export default function DetailTable() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.15, delay: Math.min(index * 0.005, 0.1) }}
-                  className="border-b border-[#141927]/50 transition-colors hover:bg-[#141927]/50"
+                  className="border-b border-border/50 transition-colors hover:bg-border/50"
                 >
-                  <td className="px-4 py-2 text-[#8892a8]">{row.deliveryAssociate}</td>
-                  <td className="px-4 py-2 font-mono text-xs text-[#5a6480]">{row.trackingId}</td>
+                  <td className="px-4 py-2 text-foreground">{row.deliveryAssociate}</td>
+                  <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{row.trackingId}</td>
                   <td className="px-4 py-2 text-center">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      row.impactDcr === 'Y' ? 'bg-amber-900/20 text-amber-400/70' : 'bg-[#141927] text-[#3d4560]'
+                      row.impactDcr === 'Y' ? 'bg-accent/20 text-accent' : 'bg-card text-muted-foreground'
                     }`}>
                       {row.impactDcr}
                     </span>
@@ -183,23 +183,23 @@ export default function DetailTable() {
                   <td className="px-4 py-2">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                       row.rtsCode === 'OUT OF DRIVING TIME'
-                        ? 'bg-red-900/20 text-red-400/80'
+                        ? 'bg-destructive/20 text-destructive'
                         : row.rtsCode === 'NO RTS CODE SELECTED'
-                        ? 'bg-emerald-900/20 text-emerald-400/70'
-                        : 'bg-[#141927] text-[#5a6480]'
+                        ? 'bg-secondary/20 text-secondary'
+                        : 'bg-card text-muted-foreground'
                     }`}>
                       {row.rtsCode}
                     </span>
                   </td>
-                  <td className="px-4 py-2 text-[#5a6480]">{row.additionalInformation || '-'}</td>
-                  <td className="px-4 py-2 text-[#5a6480]">{row.exemptionReason || '-'}</td>
-                  <td className="px-4 py-2 text-[#5a6480]">{row.plannedDeliveryDate}</td>
+                  <td className="px-4 py-2 text-muted-foreground">{row.additionalInformation || '-'}</td>
+                  <td className="px-4 py-2 text-muted-foreground">{row.exemptionReason || '-'}</td>
+                  <td className="px-4 py-2 text-muted-foreground">{row.plannedDeliveryDate}</td>
                 </motion.tr>
               ))}
             </AnimatePresence>
             {paginatedData.length === 0 && (
               <tr>
-                <td colSpan={COLUMNS.length} className="px-4 py-12 text-center text-[#3d4560]">
+                <td colSpan={COLUMNS.length} className="px-4 py-12 text-center text-muted-foreground">
                   No matching records found.
                 </td>
               </tr>
@@ -207,25 +207,25 @@ export default function DetailTable() {
           </tbody>
         </table>
       </div>
-
+ 
       {totalPages > 1 && (
-        <div className="border-t border-[#1a2035] px-5 py-3">
+        <div className="border-t border-border px-5 py-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-[#3d4560]">
+            <span className="text-xs text-muted-foreground">
               Page {page + 1} of {totalPages} ({sortedData.length} records)
             </span>
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setPage(0)}
                 disabled={page === 0}
-                className="rounded px-2 py-1 text-xs text-[#5a6480] disabled:opacity-30 hover:bg-[#141927]"
+                className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
               >
                 <ChevronsUp className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setPage(p => Math.max(0, p - 1))}
                 disabled={page === 0}
-                className="rounded px-2 py-1 text-xs text-[#5a6480] disabled:opacity-30 hover:bg-[#141927]"
+                className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
               >
                 Prev
               </button>
@@ -246,8 +246,8 @@ export default function DetailTable() {
                     onClick={() => setPage(pageNum)}
                     className={`rounded px-2 py-1 text-xs font-medium ${
                       page === pageNum
-                        ? 'bg-[#1e3a5f] text-[#7ab3e0]'
-                        : 'text-[#5a6480] hover:bg-[#141927]'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-border'
                     }`}
                   >
                     {pageNum + 1}
@@ -257,7 +257,7 @@ export default function DetailTable() {
               <button
                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                 disabled={page >= totalPages - 1}
-                className="rounded px-2 py-1 text-xs text-[#5a6480] disabled:opacity-30 hover:bg-[#141927]"
+                className="rounded px-2 py-1 text-xs text-muted-foreground disabled:opacity-30 hover:bg-border"
               >
                 Next
               </button>

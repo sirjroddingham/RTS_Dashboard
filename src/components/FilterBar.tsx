@@ -70,63 +70,63 @@ export default function FilterBar() {
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="rounded-lg border border-[#1a2035] bg-[#0f1320]/50 p-4"
+      className="rounded-lg border border-border bg-card/50 p-4"
     >
       <div className="flex items-center gap-3">
-        <Filter className="h-4 w-4 text-[#5a6480]" />
-        <span className="text-sm font-medium text-[#8892a8]">Filters</span>
+        <Filter className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-muted-foreground">Filters</span>
         {hasFilters && (
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="rounded-full bg-[#1e3a5f]/30 px-2 py-0.5 text-xs font-medium text-[#6b9fd4]"
+            className="rounded-full bg-primary/20 px-2 py-0.5 text-xs font-medium text-primary"
           >
             Active
           </motion.span>
         )}
       </div>
-
+ 
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3d4560]" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             value={filters.search}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search all fields..."
-            className="w-full rounded-md border border-[#1a2035] bg-[#0c0f18] py-2 pl-9 pr-4 text-sm text-[#b0bbd0] placeholder:text-[#3d4560] transition-colors focus:border-[#2a3555] focus:outline-none focus:ring-1 focus:ring-[#2a3555]"
+            className="w-full rounded-md border border-border bg-background py-2 pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
-
+ 
         <select
           value={filters.employee}
           onChange={(e) => setFilters({ employee: e.target.value })}
-          className="rounded-md border border-[#1a2035] bg-[#0c0f18] px-3 py-2 text-sm text-[#b0bbd0] transition-colors focus:border-[#2a3555] focus:outline-none focus:ring-1 focus:ring-[#2a3555]"
+          className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         >
-          <option value="" className="bg-[#141927]">All Employees</option>
+          <option value="" className="bg-card">All Employees</option>
           {employees.map(emp => (
-            <option key={emp} value={emp} className="bg-[#141927]">{emp}</option>
+            <option key={emp} value={emp} className="bg-card">{emp}</option>
           ))}
         </select>
-
+ 
         <div className="flex items-center gap-2">
           <input
             type="date"
             value={filters.dateRange?.[0] ? toInputDate(filters.dateRange[0]) : ''}
             onChange={handleDateStartChange}
-            className="rounded-md border border-[#1a2035] bg-[#0c0f18] px-3 py-2 text-sm text-[#b0bbd0] transition-colors focus:border-[#2a3555] focus:outline-none focus:ring-1 focus:ring-[#2a3555]"
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
-          <span className="text-[#3d4560]">to</span>
+          <span className="text-muted-foreground">to</span>
           <input
             type="date"
             value={filters.dateRange?.[1] ? displayEndDate(filters.dateRange[1]) : ''}
             onChange={handleDateEndChange}
-            className="rounded-md border border-[#1a2035] bg-[#0c0f18] px-3 py-2 text-sm text-[#b0bbd0] transition-colors focus:border-[#2a3555] focus:outline-none focus:ring-1 focus:ring-[#2a3555]"
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
-
+ 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium text-[#5a6480]">RTS:</span>
+          <span className="text-xs font-medium text-muted-foreground">RTS:</span>
           <div className="flex flex-wrap gap-1">
             {rtsCodes.map(code => (
               <motion.button
@@ -136,8 +136,8 @@ export default function FilterBar() {
                 onClick={() => toggleRTSCode(code)}
                 className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
                   filters.rtsCodes.includes(code)
-                    ? 'bg-[#1e3a5f] text-[#7ab3e0]'
-                    : 'bg-[#141927] text-[#5a6480] hover:bg-[#1a2035] hover:text-[#8892a8]'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-card text-muted-foreground hover:bg-border hover:text-foreground'
                 }`}
               >
                 {code}
@@ -145,13 +145,13 @@ export default function FilterBar() {
             ))}
           </div>
         </div>
-
+ 
         {hasFilters && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleReset}
-            className="flex items-center gap-1 rounded-md bg-red-950/20 px-3 py-2 text-xs font-medium text-red-400/70 transition-colors hover:bg-red-950/30"
+            className="flex items-center gap-1 rounded-md bg-destructive/20 px-3 py-2 text-xs font-medium text-destructive transition-colors hover:bg-destructive/30"
           >
             <X className="h-3 w-3" />
             Reset
