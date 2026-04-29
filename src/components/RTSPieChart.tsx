@@ -32,19 +32,18 @@ export default function RTSPieChart() {
     },
     legend: {
       orient: 'vertical',
-      right: 10,
+      right: 0,
       top: 'center',
       textStyle: { fontSize: 11, color: '#6b7394' },
       itemWidth: 10,
       itemHeight: 10,
       itemGap: 6,
-      padding: [0, 0, 0, 20],
     },
     series: [{
       name: 'RTS Codes',
       type: 'pie',
       radius: ['35%', '65%'],
-      center: ['32%', '50%'],
+      center: ['30%', '50%'],
       avoidLabelOverlap: true,
       itemStyle: {
         borderRadius: 6,
