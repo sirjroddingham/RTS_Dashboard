@@ -37,7 +37,7 @@ export function getChartTheme(): ChartThemeColors {
     tooltipBorder: `rgba(${get('--chart-tooltip-border')})`,
     tooltipText: `rgb(${get('--chart-tooltip-text')})`,
     tooltipMuted: `rgb(${get('--chart-tooltip-muted')})`,
-    tooltipHoverBg: `rgba(${get('--chart-tooltip-hover-bg')}, 0.25)`,
+    tooltipHoverBg: `rgba(${get('--chart-tooltip-hover-bg')}, 0.95)`,
     tooltipHoverBorder: `rgba(${get('--chart-tooltip-hover-border')}, 0.3)`,
     axisText: `rgb(${get('--chart-axis-text')})`,
     axisLine: `rgba(${get('--chart-axis-line')}, 0.3)`,
