@@ -52,11 +52,11 @@
   --text-icon: 214 20% 40%;
 
   --chart-tooltip-bg: 255 255 255;
-  --chart-tooltip-bg-alpha: 255 255 255 0.96;
+  --chart-tooltip-bg-alpha: 255 255 255 1;
   --chart-tooltip-border: 203 213 225;
   --chart-tooltip-text: 51 65 85;
   --chart-tooltip-muted: 100 116 139;
-  --chart-tooltip-hover-bg: 241 245 249;
+  --chart-tooltip-hover-bg: 219 228 239;
   --chart-tooltip-hover-border: 59 130 246;
   --chart-axis-text: 100 116 139;
   --chart-axis-line: 203 213 225;
@@ -107,11 +107,11 @@
   --text-icon: 215 25% 48%;
 
   --chart-tooltip-bg: 20 24 36;
-  --chart-tooltip-bg-alpha: 20 24 36 0.96;
+  --chart-tooltip-bg-alpha: 20 24 36 1;
   --chart-tooltip-border: 42 47 69;
   --chart-tooltip-text: 200 207 216;
   --chart-tooltip-muted: 107 115 148;
-  --chart-tooltip-hover-bg: 42 47 69;
+  --chart-tooltip-hover-bg: 38 48 73;
   --chart-tooltip-hover-border: 107 159 212;
   --chart-axis-text: 107 115 148;
   --chart-axis-line: 42 47 69;
