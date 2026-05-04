@@ -4,12 +4,7 @@ import { motion } from 'framer-motion';
 import { useDashboardStore } from '../store/useDashboardStore';
 import { useChartTheme } from '../hooks/useChartTheme';
 import { getBarChartData } from '../lib/utils';
-
-const COLORS = [
-  '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
-  '#f43f5e', '#22c55e', '#6366f1', '#ec4899', '#f97316',
-  '#06b6d4', '#8b5cf6',
-];
+import { getRTSColor } from '../lib/colors';
 
 export default function StackedBarChart() {
   const filteredData = useDashboardStore(s => s.filteredData);
@@ -38,7 +33,7 @@ export default function StackedBarChart() {
       emphasis: { focus: 'series' as const },
       data: barData.map(d => d.counts[code] || 0),
       itemStyle: {
-        color: COLORS[i % COLORS.length],
+        color: getRTSColor(code),
         borderRadius: i === codes.length - 1 ? [4, 4, 0, 0] : undefined,
       },
       barWidth: '60%',
@@ -79,14 +74,12 @@ export default function StackedBarChart() {
     const clicked = new Date(y, m - 1, d);
 
     const range = filters.dateRange;
-    if (range && range[0] && range[1]) {
-      if (isSameDay(range[0], clicked) && isSameDay(range[1], clicked)) {
-        setFilters({ dateRange: null });
-        return;
-      }
+    if (range && range[0] && isSameDay(range[0], clicked)) {
+      setFilters({ dateRange: null });
+      return;
     }
 
-    const clickedEnd = new Date(clicked.getTime() + 86400000);
+    const clickedEnd = new Date(clicked.getFullYear(), clicked.getMonth(), clicked.getDate() + 1);
     setFilters({ dateRange: [clicked, clickedEnd] });
   }, [filters.dateRange, setFilters]);
 

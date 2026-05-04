@@ -4,13 +4,7 @@ import { motion } from 'framer-motion';
 import { useDashboardStore } from '../store/useDashboardStore';
 import { useChartTheme } from '../hooks/useChartTheme';
 import { getRTSDistribution } from '../lib/utils';
-
-const COLORS = [
-  '#facc15', '#14b8a6', '#fb923c', '#a855f7', '#3b82f6',
-  '#f43f5e', '#22c55e', '#6366f1', '#ec4899', '#f97316',
-  '#06b6d4', '#8b5cf6', '#ef4444', '#10b981', '#f59e0b',
-  '#6ee7b7', '#c084fc',
-];
+import { getRTSColor } from '../lib/colors';
 
 export default function RTSPieChart() {
   const filteredData = useDashboardStore(s => s.filteredData);
@@ -78,10 +72,10 @@ export default function RTSPieChart() {
       animationType: 'scale',
       animationEasing: 'elasticOut',
       animationDelay: (idx: number) => idx * 100,
-      data: pieData.map((d, i) => ({
+      data: pieData.map((d) => ({
         ...d,
         itemStyle: {
-          color: COLORS[i % COLORS.length],
+          color: getRTSColor(d.name),
         },
       })),
     }],
